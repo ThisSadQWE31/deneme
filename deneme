@@ -575,7 +575,7 @@ do --//Main Gui
 		TextLabel.Position = UDim2.new(0.00658436213, 0, 0, 0)-UDim2.new(0,0,1,0)
 		TextLabel.Size = UDim2.new(0, 200, 0, 32)
 		TextLabel.Font = Enum.Font.Cartoon
-		TextLabel.Text = "Tiger-admin v1.1 PL"
+		TextLabel.Text = "Pillory Rage Admin V1.0"
 		TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 		TextLabel.TextScaled = true
 		TextLabel.TextSize = 14.000
@@ -608,7 +608,7 @@ do --//Main Gui
 	end
 end
 do--//Command handler
-	Prefix = "!"
+	Prefix = ":"
 	CommandsGot = 0
 	TableCommands={}
 	CommandsRawList = {}
@@ -1865,7 +1865,7 @@ do
 			wait()
 			workspace.CurrentCamera.CameraSubject = plr.Character:FindFirstChildOfClass("Humanoid")
 		end
-		Notif("Tiger admin is now unloaded, see you soon!")
+		Notif("Scripti Kapattim Usta.")
 	end,"Unloads everything")
 
 	Add_Command("kill",function(Args)
@@ -1950,7 +1950,7 @@ do
 		else
 			NotFound()
 		end
-	end,"Cant harm that player with commands","PLAYER_COMMAND")
+	end,"Kanka Onu Whitelist Aldin,Vuramazsin","PLAYER_COMMAND")
 	Add_Command("unwhitelist",function(Args)
 		local Args = GetArgs(Args)
 		local r =FindPlayer(Args[2])
@@ -1975,7 +1975,7 @@ do
 		if r then
 			States.Admined[#States.Admined+1]=r.Name
 			Notif("Admined "..r.Name)
-			Msg(r,"I Gave You Admin,Type !cmds or :cmds (sometimes i change) For Commands :)")
+			Msg(r,"I Gave You Admin,Type :cmds For Commands :)")
 			SavedAdmins[#SavedAdmins+1] = r.Name
 			if writefile and readfile then
 				local New = {}
@@ -2022,7 +2022,7 @@ do
 		else
 			NotFound()
 		end
-	end,"Admins a player","PLAYER_COMMAND")
+	end,"Admin Verir Oyuncuya","PLAYER_COMMAND")
 	Add_Command("laggun",function(Args)
 		local Args = GetArgs(Args)
 		if plr.Character:FindFirstChildOfClass("Tool") then
@@ -2697,8 +2697,8 @@ do
 	--end of teleports
 	Add_Command("allcmds",function(Args) 
 		local Args = GetArgs(Args);local Pos  = CFrame.new(916, 79, 2311)
-		Notif("Tiger admin has "..tostring(CommandsGot).." commands in total!")
-	end,"Tells you how much commands tiger admin has")
+		Notif("Pillory Admin has "..tostring(CommandsGot).." commands in total!")
+	end,"Tells you how much commands Pillory admin has")
 end
 do
 	local Check_Prefix = function(TXT)
@@ -3269,8 +3269,8 @@ function AdminChatted(Text,Speaker)
 	local TXT = string.lower(Text)
 	local SPLITED = TXT:split(" ")
 	Arg1_P = SPLITED[1]
-	local CmdsList = "[ADMIN]: !cmds, !kill [player,all], !car, !loopkill [player]"
-	local CmdsList2 = "[ADMIN]: !unloopkill [player], !tase [player,all], !opendoors, !cuffs [player]"
+	local CmdsList = "[ADMIN]: :cmds, :kill [player,all], :car, :loopkill [player]"
+	local CmdsList2 = "[ADMIN]: :unloopkill [player], :tase [player,all], :opendoors"
 
 	local Arg2_P = SPLITED[2]
 	local Arg3_P = SPLITED[3]
@@ -3444,4 +3444,4 @@ end)
 refresh()
 plr.PlayerGui.Home.fadeFrame.Visible = false--//black bar
 CmdBarFrame:TweenPosition(UDim2.new(0.5, 0, 0.899999998, 0)-UDim2.new(0,0,.05,0),"Out","Back",.5)
-Notif("Loaded! type !noinvite to disable discord invite",3)
+Notif("Made By Pillory Rage",3)
