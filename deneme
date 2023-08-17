@@ -2346,7 +2346,7 @@ do
 		local Speed = 1
 		NOFLY()
 		sFLY(true)
-	end,"stops carfly you can also use !unfly")
+	end,"stops carfly you can also use :unfly")
 	Add_Command("fly",function(Args)
 		local Args = GetArgs(Args)
 		local Speed = 1
@@ -2382,7 +2382,7 @@ do
 		local Args = GetArgs(Args)
 		Toggle(Args[2],"autore")
 	end,"",true)
-	Add_Command("addnuke",function(Args)
+	Add_Command("nuke",function(Args)
 		local Args = GetArgs(Args)
 		local Player = FindPlayer(Args[2])
 		if Player then
@@ -2392,7 +2392,7 @@ do
 					break
 				end
 			until not game
-			game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(Player.Name.." IS DEAD YOU GUYS MADE A MISTAKE!", "ALL")
+			game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(Player.Name.." GOT KILLED YOU GUYS MADE A MISTAKE!", "ALL")
 			wait(1.5)
 			--//This is what I call perfect work 
 			game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("GONNA KILL ALL IN 3", "ALL")
@@ -2402,7 +2402,7 @@ do
 			game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("GONNA KILL ALL IN 1", "ALL")
 			wait(2)
 			Kill_All()
-			Notif("Nuke kullanıldı bitti tekrar kullan.")
+			Notif("Nuke kullanıldı tekrar kullan.")
 		end
 	end,"If player dies everyone dies","PLAYER_COMMAND")
 	Add_Command("antibring",function(Args)
@@ -2412,7 +2412,7 @@ do
 	Add_Command("silentaim",function(Args)
 		local Args = GetArgs(Args)
 		Toggle(Args[2],"SilentAim")
-	end,"aim anywhere and not miss","TOGGLE_COMMAND")
+	end,"adamin yanina siktiginda bile vurur","TOGGLE_COMMAND")
 	Add_Command("antipunch",function(Args)
 		local Args = GetArgs(Args)
 		Toggle(Args[2],"AntiPunch")
