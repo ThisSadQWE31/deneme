@@ -1,0 +1,25 @@
+
+-- here's the fixed code; use v!stop to stop it, although you should really make your own spam. - decryptionite 
+-- script made for atprog
+local lplayer = game.Players.LocalPlayer
+local function getyoname(split)
+    for i, v in pairs(game.Players:GetPlayers()) do
+        local lowerName = v.Name:lower()
+        if string.sub(lowerName, 1, #split[2]) == split[2] then
+            return v 
+        end
+    end
+end
+
+lplayer.Chatted:Connect(function(message)
+    local split = message:split("/")
+    local foundplayer = getyoname(split)
+    if foundplayer then
+        if split[1] == "sabotage" then
+        local chatmessage = "v!spam pm " .. foundplayer.Name .. " 🤩😆😚💀😭😉😚🥰🇸🇾😂😚🥰♥️🥳🥰😚♥️🇸🇾🥰😚♥️🥰😭😉😚🥰😭😉😚😂🇸🇾♥️😚🥰⚫😂😉😚🥰😭♥️😚😂🥳😉😚🥰🇸🇷♥️🇸🇷😂🥳😉😂🖤😉🥳😂😚😉😚🥰😭♥️😂🇸🇷😉😚🥰⚫♥️😂😚😉🥰😭♥️😚😂🥳😉😚🥰🇸🇾♥️🇸🇷😂😚😉🥰⚫♥️🇸🇾😂🇸🇷😉🇸🇷🥰😚♥️⚫😂😚😉🥳🥰♥️🥳😂🤩🤩🥰🥰🥰🥰🥰🥰🇹🇷🖤⚫🥳😚"
+            game.Players:Chat(chatmessage)
+            print("ran")
+        end
+    end
+end)
+print("Sabotage script loaded.")
