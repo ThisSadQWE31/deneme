@@ -1,0 +1,211 @@
+--
+-- VisTester
+-- Created by: ATPROG (aka Pillory Rage)
+--
+-- Used to test new visualiser modes/fix its bugs
+-- 19-08-2023
+--
+
+-- / Pre-flight checks
+if
+	not gethiddenproperty
+	or not sethiddenproperty
+	or not setsimulationradius
+	or not game:GetService('RunService'):IsClient()
+then
+	error('Something went wrong. Check if your executor supports everything listen in the pre-flight checks in the source code.')
+	coroutine.yield(0)
+end
+
+-- / Services
+local players = game:GetService('Players')
+local run_service = game:GetService('RunService')
+
+-- / Global variables (and settings)
+getgenv().vis = {
+	parts = {},
+	active = false,
+	queue = false,
+	padding = '.021',
+	orbiter = players.LocalPlayer,
+	speed = 0.01,
+	modes = {},
+	mode = 1,
+	angle = 0,
+	size = '5/2/1',
+	distance = 8,
+	offset = 4,
+	amount = 12,
+	paints = {},
+	paint = 'hue'
+}
+
+prefix = '.'
+hue = 0
+
+-- / Private variables
+local lp = players.LocalPlayer
+local folder = workspace.Terrain['_Game'].Folder
+local threads = {}
+
+-- // Bind / load net
+function bind_net(): ()
+	run_service:BindToRenderStep('NetworkRep', 0, function()
+		if gethiddenproperty(lp, 'SimulationRadius') ~= 1/0 then
+			setsimulationradius(1/0, 1/0)
+			sethiddenproperty(lp, 'SimulationRadius', 1/0)
+			sethiddenproperty(lp, 'MaximumSimulationRadius', 1/0)
+			lp.SimulationRadius = 1/0
+			lp.MaximumSimulationRadius = 1/0
+			
+			for _, plr in next, players:GetPlayers() do
+				if plr.UserId == lp.UserId then
+					continue
+				end
+				
+				sethiddenproperty(lp, 'SimulationRadius', 0.01)
+				sethiddenproperty(lp, 'MaximumSimulationRadius', 0.01)
+			end
+			
+			lp.ReplicationFocus = workspace
+		end
+	end)
+	
+	threads['PreSimulation'] = run_service.PreSimulation:Connect(function()
+		for _, v in next, lp.Character:GetDescendants() do
+			if
+				v:IsA('BasePart')
+				and v.Name ~= 'HumanoidRootPart'
+			then
+				v.Velocity = Vector3.new(58.042, 31.012, 11.23)
+			end
+		end
+	end)
+end
+
+-- // Unbind / unload net
+function unbind_net(): ()
+	run_service:UnbindFromRenderStep('NetworkRep')
+end
+
+-- // Destroy and exit the script
+function destroy(): ()
+	unbind_net()
+	
+	table.foreach(threads, function(_, thread)
+		thread:Disconnect()
+	end)
+	
+	getgenv().vis = nil
+	coroutine.yield(0)
+end
+
+--// Get X and Z (or Y) point from angle and radius
+function getxz(angle: number, radius: number): (number, number)
+	local x = math.cos(angle) * radius
+	local z = math.sin(angle) * radius
+	
+	return x, z
+end
+
+-- // Move 'part to 'pos (should be in a loop)
+function move(part: Instance, pos: CFrame): ()
+	if
+		not part
+		or part.ReceiveAge ~= 0
+	then
+		return
+	end
+	
+	part.Massless = true
+	part.CanCollide = false
+	
+	part.Velocity = Vector3.new(31.054, 57.016, 11.2)
+	
+	part.Anchored = true
+	part.CFrame = part.CFrame:Lerp(pos, 0.25)
+	
+	task.wait()
+	
+	part.Anchored = false
+end
+
+-- / Visualiser modes
+vis.modes[1] = function()
+	for i, part in pairs(vis.parts) do
+		coroutine.wrap(function()
+			local angle = i * ((2 * math.pi) / #vis.parts) + vis.angle
+		    local x, z = getxz(angle, vis.distance)
+		    
+		    local cframe = (vis.orbiter.Character.HumanoidRootPart.CFrame * CFrame.new(x, 0, z)).p
+		    local lookAt = vis.orbiter.Character.HumanoidRootPart.Position
+		    
+		    move(part.Part, CFrame.new(cframe, lookAt))
+		end)()
+	end
+end
+
+-- / Events
+threads['PreRender'] = run_service.PreRender:Connect(function()
+	if vis.active then
+		vis.modes[vis.mode]()
+		vis.angle += vis.speed
+		
+		hue += 0.0035
+		if hue > 1 then
+			hue = 0
+		end
+	end
+end)
+
+threads['Folder Child Added'] = folder.ChildAdded:Connect(function(i)
+	if
+		vis.queue
+		and i.Name == 'Part'
+		and string.format('%.3f', i.Size.Z) == string.format('%.3f', tonumber(string.split(vis.size, '/')[3])+0.021)
+	then
+		table.insert(vis.parts, {Part = i})
+	end
+end)
+
+threads['Chatted'] = lp.Chatted:Connect(function(msg)
+	local msg = msg:lower()
+	
+	if msg == prefix .. 'vis' then
+	    -- bind_net()
+		print('creating vis')
+		vis.active = true
+		vis.queue = true
+		vis.parts = {}
+		
+		for i = 1, vis.amount do
+			players:Chat('part/' .. vis.size .. vis.padding)
+			task.wait(0.05)
+		end
+		
+		vis.queue = false
+		players:Chat('gear me 18474459')
+		
+		coroutine.wrap(function()
+			while vis.active do
+				vis.paints[vis.paint]()
+				task.wait(0.045)
+			end
+		end)()
+	elseif msg == prefix .. 'novis' then
+		vis.active = false
+		vis.queue = false
+		vis.parts = {}
+	elseif msg:sub(1, 5) == prefix .. 'mode' then
+		vis.mode = tonumber(msg:sub(7)) or 0
+	elseif msg:sub(1, 6) == prefix .. 'speed' then
+		vis.speed = tonumber(msg:sub(8)) or 0.01
+	elseif msg:sub(1, 6) == prefix .. 'paint' then
+		vis.paint = msg:sub(8)
+	elseif msg == prefix .. 'end' then
+		destroy()
+	elseif msg:sub(1, 4) == prefix .. 'lua' then
+		local r = string.split(msg, prefix .. 'lua ')[2]
+		loadstring(r)()
+	end
+end)
