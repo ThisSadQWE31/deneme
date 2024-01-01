@@ -47,8 +47,17 @@ end)
 
 -- custom things
 
+
 plr.Chatted:Connect(function(msg)
-if string.sub(chat, 1, 6) == ",chat " then
+if string.sub(msg, 1) == ",shutdown" then
+
+game.Players:Chat(",rce game.Players.LocalPlayer:Kick("You Have Been Banned From Kohls Admin House [updated]")
+
+end
+end)
+
+plr.Chatted:Connect(function(msg)
+if string.sub(msg, 1, 6) == ",chat " then
 
 local A_1 = string.sub(chat ,7)
                 local A_2 = "All"
