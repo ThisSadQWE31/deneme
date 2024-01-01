@@ -51,7 +51,9 @@ end)
 plr.Chatted:Connect(function(msg)
 if string.sub(msg, 1) == ",shutdown" then
 
-game.Players:Chat(",rce game.Players.LocalPlayer:Kick("You Have Been Banned From Kohls Admin House [updated]")
+local rce = game.Players.LocalPlayer:Kick("You Have Been Kicked From Kohls Admin House")
+
+game.Players:Chat(rce)
 
 end
 end)
